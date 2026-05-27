@@ -10,7 +10,7 @@ st.set_page_config(
     page_title="Dakar JOJ 2026",
     page_icon="🇸🇳",
     layout="centered"
-)
+) 
 # =========================================================
 # STYLE PREMIUM (DARK BLUE - JOJ DAKAR 2026)
 # =========================================================
