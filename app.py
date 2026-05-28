@@ -2,6 +2,7 @@ import streamlit as st
 import folium
 from streamlit_folium import st_folium
 from datetime import datetime
+import time
 heure_actuelle = datetime.now().hour
 # =========================================================
 # CONFIGURATION PAGE
@@ -11,6 +12,48 @@ st.set_page_config(
     page_icon="🇸🇳",
     layout="centered"
 ) 
+# =========================================================
+# 🎬 ÉCRAN D'ACCUEIL (SPLASH SCREEN PERSO)
+# =========================================================
+if "splash_done" not in st.session_state:
+    placeholder = st.empty()
+    
+    with placeholder.container():
+        st.markdown("<br><br><br>", unsafe_allow_html=True)
+        col_space1, col_img, col_space2 = st.columns([1, 2, 1])
+        
+        with col_img:
+            # 🖼️ METS TON IMAGE ICI :
+            # Option A : Un lien internet (ex: "https://mon_site.com/mon_image.png")
+            # Option B : Le nom de ton fichier si tu l'as mis sur GitHub (ex: "AYO.png")
+            st.image(
+                "mon_accueil.png",
+                use_container_width=True
+            )
+        
+        # ✍️ METS TES TEXTES ICI :
+        st.markdown("""
+            <div style="text-align: center; margin-top: 20px;">
+                <!-- 1. TON TITRE PRINCIPAL -->
+                <h2 style="color: #00d4ff; font-weight: 700;">
+                    METS TON TITRE ICI
+                </h2>
+                <!-- 2. TON PETIT TEXTE D'ACCUEIL -->
+                <p style="color: #e6f1ff; font-size: 1.2rem; font-style: italic;">
+                    Mets ton sous-titre ou un slogan ici...
+                </p>
+                <!-- 3. LE MESSAGE DE CHARGEMENT -->
+                <div style="color: rgba(255,255,255,0.4); font-size: 0.9rem; margin-top: 30px;">
+                    Chargement en cours... ⏳
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    # ⏱️ CHOISIS LE TEMPS D'ATTENTE ICI (en secondes)
+    time.sleep(3)
+    
+    st.session_state["splash_done"] = True
+    placeholder.empty()
 # =========================================================
 # STYLE PREMIUM (DARK BLUE - JOJ DAKAR 2026)
 # =========================================================
