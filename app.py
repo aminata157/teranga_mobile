@@ -13,74 +13,60 @@ st.set_page_config(
     layout="centered"
 ) 
 # =========================================================
-# 🎬 ÉCRAN D'ACCUEIL COMPLET (PLEIN ÉCRAN SANS MARGES)
+# 1. LES IMPORTATIONS (Tout en haut)
+# =========================================================
+import streamlit as st
+import folium
+from streamlit_folium import st_folium
+from datetime import datetime
+import time # <-- Super important pour les 3 secondes !
+
+heure_actuelle = datetime.now().hour
+
+# =========================================================
+# 2. LA CONFIGURATION DE LA PAGE (Juste après)
+# =========================================================
+st.set_page_config(
+    page_title="Dakar JOJ 2026",
+    page_icon="🇸🇳",
+    layout="centered"
+)
+
+# =========================================================
+# 3. 🎬 L'ÉCRAN D'ACCUEIL (SPLASH SCREEN) <-- C'EST ICI !
 # =========================================================
 if "splash_done" not in st.session_state:
     placeholder = st.empty()
     
     with placeholder.container():
-        st.markdown(
-            f"""
-            <style>
-            /* 1. On supprime les marges par défaut de Streamlit */
-            [data-testid="stAppViewContainer"] > .main {{
-                padding: 0 !important;
-            }}
-            [data-testid="stHeader"] {{
-                display: none !important; /* Cache la barre du haut de Streamlit */
-            }}
-            
-            /* 2. Style du conteneur plein écran */
-            .splash-container {{
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background-color: #061a33;
-                z-index: 999999;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                overflow: hidden;
-            }}
-            
-            /* 3. L'image prend 100% de la surface disponible */
-            .splash-img {{
-                width: 100vw;
-                height: 100vh;
-                object-fit: cover; /* Remplit l'écran sans déformer l'image */
-            }}
-            
-            .splash-text-box {{
-                position: absolute;
-                bottom: 12%;
-                text-align: center;
-                width: 100%;
-                background: rgba(6, 26, 51, 0.65);
-                padding: 20px 0;
-            }}
-            </style>
-            
-            <div class="splash-container">
-                <img src="app/static/mon_acceuil.png" class="splash-img">
-                
-                <div class="splash-text-box">
-                    <h2 style="color: #00d4ff; font-weight: 700; margin: 0; font-family: sans-serif;">Teranga Mobile</h2>
-                    <p style="color: #e6f1ff; font-size: 1.2rem; font-style: italic; margin: 5px 0 0 0; font-family: sans-serif;">
-                        Le cœur du Sénégal bat au rythme des JOJ 2026...
-                    </p>
+        st.markdown("<br><br><br>", unsafe_allow_html=True)
+        col_space1, col_img, col_space2 = st.columns([1, 2, 1])
+        
+        with col_img:
+            # Remplace par le nom de ton fichier image ou ton lien URL
+            st.image(
+                "mon_accueil.png",
+                use_container_width=True
+            )
+        
+        st.markdown("""
+            <div style="text-align: center; margin-top: 20px;">
+                <h2 style="color: #00d4ff; font-weight: 700;">
+                    BIENVENUE AU SENEGAL
+                </h2>
+                <p style="color: #e6f1ff; font-size: 1.2rem; font-style: italic;">
+                    Dall len ak diam ci senegal
+                </p>
+                <div style="color: rgba(255,255,255,0.4); font-size: 0.9rem; margin-top: 30px;">
+                    Chargement en cours... ⏳
                 </div>
             </div>
-            """,
-            unsafe_allow_html=True
-        )
+        """, unsafe_allow_html=True)
         
-    time.sleep(3)
+    time.sleep(3) # Temps d'attente (3 secondes)
     st.session_state["splash_done"] = True
     placeholder.empty()
-    st.rerun() # Force Streamlit à rafraîchir la page pour remettre les marges normales du site
+
 # =========================================================
 # STYLE PREMIUM (DARK BLUE - JOJ DAKAR 2026)
 # =========================================================
