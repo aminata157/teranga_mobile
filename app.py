@@ -24,8 +24,6 @@ if "splash_done" not in st.session_state:
         
         with col_img:
             # 🖼️ METS TON IMAGE ICI :
-            # Option A : Un lien internet (ex: "https://mon_site.com/mon_image.png")
-            # Option B : Le nom de ton fichier si tu l'as mis sur GitHub (ex: "AYO.png")
             st.image(
                 "mon_accueil.png",
                 use_container_width=True
@@ -34,15 +32,15 @@ if "splash_done" not in st.session_state:
         # ✍️ METS TES TEXTES ICI :
         st.markdown("""
             <div style="text-align: center; margin-top: 20px;">
-                <!-- 1. TON TITRE PRINCIPAL -->
+                <!-- 1. Bienvenue aus SENEGAL -->
                 <h2 style="color: #00d4ff; font-weight: 700;">
                     METS TON TITRE ICI
                 </h2>
-                <!-- 2. TON PETIT TEXTE D'ACCUEIL -->
+                <!-- 2. DAAL LEEN AK DIAM -->
                 <p style="color: #e6f1ff; font-size: 1.2rem; font-style: italic;">
                     Mets ton sous-titre ou un slogan ici...
                 </p>
-                <!-- 3. LE MESSAGE DE CHARGEMENT -->
+                <!-- 3. Un moment svp -->
                 <div style="color: rgba(255,255,255,0.4); font-size: 0.9rem; margin-top: 30px;">
                     Chargement en cours... ⏳
                 </div>
