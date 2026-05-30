@@ -1165,11 +1165,10 @@ else:
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # Petit bouton discret pour simuler un nouvel achat si besoin
+                # --- REMPLACE LE BOUTON "ACHETER UN AUTRE BILLET" PAR CELUI-CI : ---
             if st.button("🔄 Acheter un autre billet"):
                 st.session_state["paiement_effectue"] = False
-                st.rerun()
-
+        
         st.divider()
         st.markdown("""
         <div style="background: linear-gradient(135deg, #0c5460, #117a8b); padding:25px; border-radius:15px; color:white; box-shadow:0px 4px 12px rgba(0,0,0,0.2); margin-top:10px; text-align:center;">
