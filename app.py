@@ -1111,6 +1111,30 @@ else:
 
         st.divider()
 
+        # --- LOGIQUE DE PAIEMENT ---
+        # On initialise les états de paiement s'ils n'existent pas encore
+        if "paiement_effectue" not in st.session_state:
+            st.session_state["paiement_effectue"] = False
+
+        # Si le paiement n'est pas encore fait, on affiche le module Wave / Orange Money
+        if not st.session_state["paiement_effectue"]:
+            st.subheader("💳 Étape obligatoire : Paiement du billet (1 000 FCFA)")
+            
+            mode_paiement = st.radio("Sélectionnez votre moyen de paiement :", ["Wave 🌊", "Orange Money 🍊"], horizontal=True)
+            numero_tel = st.text_input("Entrez votre numéro de téléphone (9 chiffres)", key="num_pay", max_chars=9)
+            
+        if st.button("📱 Procéder au paiement"):
+                if nom_billet == "":
+                    st.error("⚠️ Veuillez d'abord remplir votre Nom complet plus haut avant de payer.")
+                elif len(numero_tel) < 9 or not numero_tel.isdigit():
+                    st.error("⚠️ Veuillez entrer un numéro de téléphone valide à 9 chiffres (ex: 77xxxxxxx).")
+                else:
+                    with st.spinner(f"Connexion avec {mode_paiement} en cours... Veuillez valider la notification sur votre téléphone."):
+                        time.sleep(3) # Simule l'attente de validation USSD/Application
+                    st.success(f"✅ Paiement de 1 000 FCFA réussi via {mode_paiement} ! Vous pouvez maintenant générer votre billet.")
+                    st.session_state["paiement_effectue"] = True
+                    st.rerun() # Rafraîchit la page pour débloquer le bouton du billet    
+
         if st.button("🎫 Générer mon billet"):
 
             if nom_billet == "":
@@ -1140,6 +1164,11 @@ else:
                     📱 Présentez ce QR code à l'entrée.
                 </div>
                 """, unsafe_allow_html=True)
+                
+                # Petit bouton discret pour simuler un nouvel achat si besoin
+            if st.button("🔄 Acheter un autre billet"):
+                st.session_state["paiement_effectue"] = False
+                st.rerun()
 
         st.divider()
         st.markdown("""
