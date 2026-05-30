@@ -1158,30 +1158,53 @@ else:
                 if nom_billet == "":
                     st.error("⚠️ Veuillez entrer votre nom complet.")
                 else:
-                    billet_texte = f"JOJ Dakar 2026 | {nom_billet} | {evenement} | {date_billet} | {lieu_billet}"
+                    # --- SAUVEGARDE DANS LA BASE DE DONNÉES ---
+                    conn = sqlite3.connect("teranga_data.db")
+                    c = conn.cursor()
+                    c.execute(
+                        "INSERT INTO billets (nom, evenement, date_billet, lieu_billet) VALUES (?, ?, ?, ?)",
+                        (nom_billet, evenement, date_billet, lieu_billet)
+                    )
+                    conn.commit()
+                    conn.close()
 
-                    qr = qrcode.QRCode(version=1, box_size=10, border=5)
-                    qr.add_data(billet_texte)
-                    qr.make(fit=True)
-                    img_qr = qr.make_image(fill_color="black", back_color="white").convert("RGB")
+                    # On stocke temporairement les infos du billet généré pour l'afficher après le rerun
+                    st.session_state["dernier_billet"] = {
+                        "nom": nom_billet,
+                        "evenement": evenement,
+                        "date": date_billet,
+                        "lieu": lieu_billet
+                    }
+                    
+                    st.success("✅ Billet généré et sauvegardé avec succès !")
+                    st.rerun() # <--- FORCE LA PAGE À SE RECHARGER POUR METTRE L'HISTORIQUE À JOUR
 
-                    st.success("✅ Billet généré avec succès !")
-                    st.markdown("## 🎟️ Mon Billet JOJ Dakar 2026")
+            # Affichage du billet juste après le rerun de sauvegarde
+            if "dernier_billet" in st.session_state and st.session_state["dernier_billet"] is not None:
+                db = st.session_state["dernier_billet"]
+                billet_texte = f"JOJ Dakar 2026 | {nom_billet} | {evenement} | {date_billet} | {lieu_billet}"
+                qr = qrcode.QRCode(version=1, box_size=10, border=5)
+                qr.add_data(billet_texte)
+                qr.make(fit=True)
+                img_qr = qr.make_image(fill_color="black", back_color="white").convert("RGB")
+
+                st.success("✅ Billet généré avec succès !")
+                st.markdown("## 🎟️ Mon Billet JOJ Dakar 2026")
     
-                    col1, col2 = st.columns([2, 1])
-                    with col1:
-                        st.write(f"👤 Nom : **{nom_billet}**")
-                        st.write(f"🏅 Événement : **{evenement}**")
-                        st.write(f"📅 Date : **{date_billet}**")
-                        st.write(f"📍 Lieu : **{lieu_billet}**")
-                    with col2:
-                        st.image(img_qr, caption="QR Code du billet", width=220)
+                col1, col2 = st.columns([2, 1])
+                with col1:
+                    st.write(f"👤 Nom : **{nom_billet}**")
+                    st.write(f"🏅 Événement : **{evenement}**")
+                    st.write(f"📅 Date : **{date_billet}**")
+                    st.write(f"📍 Lieu : **{lieu_billet}**")
+                with col2:
+                    st.image(img_qr, caption="QR Code du billet", width=220)
 
-                    st.markdown("""
-                    <div style="background-color:#d1ecf1; padding:18px; border-radius:12px; font-size:20px; font-weight:bold; text-align:center; color:#0c5460; margin-top:15px;">
-                        📱 Présentez ce QR code à l'entrée.
-                    </div>
-                    """, unsafe_allow_html=True)
+                st.markdown("""
+                <div style="background-color:#d1ecf1; padding:18px; border-radius:12px; font-size:20px; font-weight:bold; text-align:center; color:#0c5460; margin-top:15px;">
+                    📱 Présentez ce QR code à l'entrée.
+                </div>
+                """, unsafe_allow_html=True)
                 
                 # --- REMPLACE LE BOUTON "ACHETER UN AUTRE BILLET" PAR CELUI-CI : ---
             if st.button("🔄 Acheter un autre billet"):
