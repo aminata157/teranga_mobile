@@ -1137,7 +1137,7 @@ else:
 
         # Si le paiement n'est pas encore fait, on affiche le module Wave / Orange Money
         if not st.session_state["paiement_effectue"]:
-            st.subheader("💳 Étape obligatoire : Paiement du billet (1 000 FCFA)")
+            st.subheader("💳 Étape obligatoire : Paiement du billet ")
             
             mode_paiement = st.radio("Sélectionnez votre moyen de paiement :", ["Wave 🌊", "Orange Money 🍊"], horizontal=True)
             numero_tel = st.text_input("Entrez votre numéro de téléphone (9 chiffres)", key="num_pay", max_chars=9)
@@ -1150,7 +1150,7 @@ else:
                 else:
                     with st.spinner(f"Connexion avec {mode_paiement} en cours... Veuillez valider la notification sur votre téléphone."):
                         time.sleep(3) # Simule l'attente de validation USSD/Application
-                    st.success(f"✅ Paiement de 1 000 FCFA réussi via {mode_paiement} ! Vous pouvez maintenant générer votre billet.")
+                    st.success(f"✅ Paiement de .... FCFA réussi via {mode_paiement} ! Vous pouvez maintenant générer votre billet.")
                     st.session_state["paiement_effectue"] = True
                     st.rerun() # Rafraîchit la page pour débloquer le bouton du billet    
         else:
