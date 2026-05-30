@@ -7,9 +7,28 @@ import math
 from streamlit_folium import st_folium
 from datetime import datetime
 from PIL import Image
+import sqlite3
 
 heure_actuelle = datetime.now().hour
 
+# ---- INITIALISATION BASE DE DONNÉES BILLETS ----
+def initialiser_db_billets():
+    conn = sqlite3.connect("teranga_data.db")
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS billets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nom TEXT,
+            evenement TEXT,
+            date_billet TEXT,
+            lieu_billet TEXT
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+# On l'exécute directement
+initialiser_db_billets()
 # =========================================================
 # CONFIGURATION PAGE
 # =========================================================
@@ -1168,7 +1187,38 @@ else:
             if st.button("🔄 Acheter un autre billet"):
                 st.session_state["paiement_effectue"] = False
                 st.rerun() 
+       # ---- HISTORIQUE DES BILLETS ACHETÉS ----
+        st.divider()
+        st.subheader("🗂️ Votre Historique d'achats")
+
+        conn = sqlite3.connect("teranga_data.db")
+        c = conn.cursor()
+        c.execute("SELECT nom, evenement, date_billet, lieu_billet FROM billets ORDER BY id DESC")
+        tous_les_billets = c.fetchall()
+        conn.close()
+
+        if tous_les_billets:
+            st.info(f"💡 Vous avez **{len(tous_les_billets)}** billet(s) enregistré(s).")
             
+            for b in tous_les_billets:
+                # Utilisation de st.expander pour un affichage propre par carte cliquable
+                with st.expander(f"🎟️ {b[1]} — {b[0]}"):
+                    col_b1, col_b2 = st.columns([2, 1])
+                    with col_b1:
+                        st.write(f"👤 **Spectateur :** {b[0]}")
+                        st.write(f"🏅 **Épreuve :** {b[1]}")
+                        st.write(f"📅 **Date :** {b[2]}")
+                        st.write(f"📍 **Lieu :** {b[3]}")
+                    with col_b2:
+                        # Recréation dynamique du mini QR code pour l'historique
+                        txt_mini = f"JOJ Dakar 2026 | {b[0]} | {b[1]} | {b[2]} | {b[3]}"
+                        qr_m = qrcode.QRCode(version=1, box_size=4, border=2)
+                        qr_m.add_data(txt_mini)
+                        qr_m.make(fit=True)
+                        img_qr_m = qr_m.make_image(fill_color="black", back_color="white").convert("RGB")
+                        st.image(img_qr_m, width=120)
+        else:
+            st.write("ℹ️ Aucun billet enregistré pour le moment.")     
         
         st.divider()
         st.markdown("""
