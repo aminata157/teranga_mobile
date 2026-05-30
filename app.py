@@ -83,7 +83,7 @@ if not st.session_state["connecte"]:
         with open(image_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
 
-    image_base64 = get_base64_image("accueil.png.jpeg")
+    image_base64 = get_base64_image("mon_accueil.png")
 
     # ======================================
     # CSS ARRIERE-PLAN
