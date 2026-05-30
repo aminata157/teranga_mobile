@@ -1123,7 +1123,7 @@ else:
             mode_paiement = st.radio("Sélectionnez votre moyen de paiement :", ["Wave 🌊", "Orange Money 🍊"], horizontal=True)
             numero_tel = st.text_input("Entrez votre numéro de téléphone (9 chiffres)", key="num_pay", max_chars=9)
             
-        if st.button("📱 Procéder au paiement"):
+            if st.button("📱 Procéder au paiement"):
                 if nom_billet == "":
                     st.error("⚠️ Veuillez d'abord remplir votre Nom complet plus haut avant de payer.")
                 elif len(numero_tel) < 9 or not numero_tel.isdigit():
@@ -1134,40 +1134,41 @@ else:
                     st.success(f"✅ Paiement de 1 000 FCFA réussi via {mode_paiement} ! Vous pouvez maintenant générer votre billet.")
                     st.session_state["paiement_effectue"] = True
                     st.rerun() # Rafraîchit la page pour débloquer le bouton du billet    
+        else:
+            if st.button("🎫 Générer mon billet"):
+                if nom_billet == "":
+                    st.error("⚠️ Veuillez entrer votre nom complet.")
+                else:
+                    billet_texte = f"JOJ Dakar 2026 | {nom_billet} | {evenement} | {date_billet} | {lieu_billet}"
 
-        if st.button("🎫 Générer mon billet"):
+                    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+                    qr.add_data(billet_texte)
+                    qr.make(fit=True)
+                    img_qr = qr.make_image(fill_color="black", back_color="white").convert("RGB")
 
-            if nom_billet == "":
-                st.error("⚠️ Veuillez entrer votre nom complet.")
-            else:
-                billet_texte = f"JOJ Dakar 2026 | {nom_billet} | {evenement} | {date_billet} | {lieu_billet}"
+                    st.success("✅ Billet généré avec succès !")
+                    st.markdown("## 🎟️ Mon Billet JOJ Dakar 2026")
+    
+                    col1, col2 = st.columns([2, 1])
+                    with col1:
+                        st.write(f"👤 Nom : **{nom_billet}**")
+                        st.write(f"🏅 Événement : **{evenement}**")
+                        st.write(f"📅 Date : **{date_billet}**")
+                        st.write(f"📍 Lieu : **{lieu_billet}**")
+                    with col2:
+                        st.image(img_qr, caption="QR Code du billet", width=220)
 
-                qr = qrcode.QRCode(version=1, box_size=10, border=5)
-                qr.add_data(billet_texte)
-                qr.make(fit=True)
-                img_qr = qr.make_image(fill_color="black", back_color="white").convert("RGB")
-
-                st.success("✅ Billet généré avec succès !")
-                st.markdown("## 🎟️ Mon Billet JOJ Dakar 2026")
-
-                col1, col2 = st.columns([2, 1])
-                with col1:
-                    st.write(f"👤 Nom : **{nom_billet}**")
-                    st.write(f"🏅 Événement : **{evenement}**")
-                    st.write(f"📅 Date : **{date_billet}**")
-                    st.write(f"📍 Lieu : **{lieu_billet}**")
-                with col2:
-                    st.image(img_qr, caption="QR Code du billet", width=220)
-
-                st.markdown("""
-                <div style="background-color:#d1ecf1; padding:18px; border-radius:12px; font-size:20px; font-weight:bold; text-align:center; color:#0c5460; margin-top:15px;">
-                    📱 Présentez ce QR code à l'entrée.
-                </div>
-                """, unsafe_allow_html=True)
+                    st.markdown("""
+                    <div style="background-color:#d1ecf1; padding:18px; border-radius:12px; font-size:20px; font-weight:bold; text-align:center; color:#0c5460; margin-top:15px;">
+                        📱 Présentez ce QR code à l'entrée.
+                    </div>
+                    """, unsafe_allow_html=True)
                 
                 # --- REMPLACE LE BOUTON "ACHETER UN AUTRE BILLET" PAR CELUI-CI : ---
             if st.button("🔄 Acheter un autre billet"):
                 st.session_state["paiement_effectue"] = False
+                st.rerun() 
+            
         
         st.divider()
         st.markdown("""
